@@ -42,4 +42,55 @@ class Reminder extends Controller {
         }
     }
 
+    public function edit($id = null) {
+        if (!isset($_SESSION['auth']) || !isset($_SESSION['user_id'])) {
+            $_SESSION['error'] = "Please login first.";
+            header("Location: /login");
+            exit;
+        }
+
+        $user_id = $_SESSION['user_id'];
+        $model = $this->model('ReminderModel');
+
+        if (!$id) {
+            $_SESSION['error'] = "Invalid reminder ID.";
+            header("Location: /reminder");
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $subject = trim($_POST['subject'] ?? '');
+            $completed = isset($_POST['completed']) ? 1 : 0;
+
+            if (empty($subject)) {
+                $_SESSION['error'] = "Reminder cannot be empty.";
+                header("Location: /reminder/edit/$id");
+                exit;
+            }
+
+            $reminder = $model->getById($id, $user_id);
+            if (!$reminder) {
+                $_SESSION['error'] = "Reminder not found or unauthorized.";
+                header("Location: /reminder");
+                exit;
+            }
+
+            $model->update($id, $subject, $completed, $user_id);
+            $_SESSION['message'] = "Reminder updated.";
+            header("Location: /reminder");
+            exit;
+        } else {
+            $reminder = $model->getById($id, $user_id);
+
+            if (!$reminder) {
+                $_SESSION['error'] = "Reminder not found or unauthorized.";
+                header("Location: /reminder");
+                exit;
+            }
+
+            $this->view('reminder/edit', ['reminder' => $reminder]);
+        }
+    }
+
+
 }
