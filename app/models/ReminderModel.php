@@ -25,4 +25,11 @@ class ReminderModel {
         $stmt = $db->prepare("UPDATE reminders SET subject = ?, completed = ? WHERE id = ? AND user_id = ?");
         $stmt->execute([$subject, $completed, $id, $user_id]);
     }
+
+    public function getById($id, $user_id) {
+        $db = db_connect();
+        $stmt = $db->prepare("SELECT * FROM reminders WHERE id = ? AND user_id = ?");
+        $stmt->execute([$id, $user_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
