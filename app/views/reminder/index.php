@@ -14,7 +14,7 @@
                     <td>
                         <a href="/reminder/edit/<?= $reminder['id'] ?>" class="btn btn-sm btn-primary">Edit</a>
                         <a href="/reminder/delete/<?= $reminder['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this reminder?')">Delete</a>
-
+                        
                     </td>
                 </tr>
             <?php endforeach; ?>

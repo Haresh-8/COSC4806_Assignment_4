@@ -2,17 +2,19 @@
 
 class Reminder extends Controller {
     public function index() {
-    if (!isset($_SESSION['auth']) || !isset($_SESSION['user_id'])) {
-        $_SESSION['error'] = "Unauthorized access.";
-        header("Location: /login");
-        exit;
+        if (!isset($_SESSION['auth']) || !isset($_SESSION['user_id'])) {
+            $_SESSION['error'] = "Unauthorized access.";
+            header("Location: /login");
+            exit;
+        }
+
+        $user_id = $_SESSION['user_id'];
+        $model = $this->model('ReminderModel');
+        $reminders = $model->getByUser($user_id);
+
+        $this->view('reminder/index', ['reminders' => $reminders]);
     }
 
-    $model = $this->model('ReminderModel');
-    $reminders = $model->getByUser($_SESSION['user_id']);
-
-    $this->view('reminder/index', ['reminders' => $reminders]);
-  }
     public function create() {
         if (!isset($_SESSION['auth']) || !isset($_SESSION['user_id'])) {
             $_SESSION['error'] = "Please login first.";
@@ -91,6 +93,7 @@ class Reminder extends Controller {
             $this->view('reminder/edit', ['reminder' => $reminder]);
         }
     }
+
     public function delete($id = null) {
         if (!isset($_SESSION['auth']) || !isset($_SESSION['user_id'])) {
             $_SESSION['error'] = "Please login first.";
@@ -119,5 +122,4 @@ class Reminder extends Controller {
         header("Location: /reminder");
         exit;
     }
-
 }
