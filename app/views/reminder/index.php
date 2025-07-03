@@ -3,7 +3,7 @@
 <div class="container mt-4">
     <h2>Your Reminders</h2>
     <!-- <a href="/reminder/create" class="btn btn-success mb-3">Add Reminder</a>-->
-
+     
     <table class="table table-striped">
         <thead><tr><th>Subject</th><th>Status</th><th>Actions</th></tr></thead>
         <tbody>
@@ -20,6 +20,7 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+    <a href="/home" class="btn btn-secondary mb-3">← Back to Home</a>
 </div>
 
 <?php require_once 'app/views/templates/footer.php'; ?>
