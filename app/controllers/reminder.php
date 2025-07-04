@@ -122,4 +122,35 @@ class Reminder extends Controller {
         header("Location: /reminder");
         exit;
     }
+
+  
+    public function complete($id = null) {
+        if (!isset($_SESSION['auth']) || !isset($_SESSION['user_id'])) {
+            $_SESSION['error'] = "Please login first.";
+            header("Location: /login");
+            exit;
+        }
+
+        if (!$id) {
+            $_SESSION['error'] = "Invalid reminder ID.";
+            header("Location: /reminder");
+            exit;
+        }
+
+        $user_id = $_SESSION['user_id'];
+        $model = $this->model('ReminderModel');
+
+        $reminder = $model->getById($id, $user_id);
+        if (!$reminder) {
+            $_SESSION['error'] = "Reminder not found or unauthorized.";
+            header("Location: /reminder");
+            exit;
+        }
+
+        $model->update($id, $reminder['subject'], 1, $user_id);
+
+        $_SESSION['message'] = "Reminder marked as completed.";
+        header("Location: /reminder");
+        exit;
+    }
 }
